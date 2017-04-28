@@ -1,0 +1,18 @@
+<h1>
+  {{title}}
+  
+</h1>
+<ul>
+  <li ><a [routerLink]="['/']">landing</a></li>
+  <li ><a [routerLink]="['/gameroom']">gameroom</a></li>
+  <li ><a [routerLink]="['/gamearena']">gamearena</a></li>
+</ul>
+ 
+<div class="jumbotron">
+	<div class="row">
+		<div class="col-sm-4 col-sm-offset-4 ">
+        <router-outlet></router-outlet>
+		</div>
+	</div>
+
+</div>
