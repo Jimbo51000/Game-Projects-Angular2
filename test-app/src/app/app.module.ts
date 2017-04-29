@@ -12,6 +12,7 @@ import { GameroomComponent } from './gameroom/gameroom.component';
 import { routing } from './app.routes';
 
 import { GamearenaComponent } from './gamearena/gamearena.component';
+import {AppService} from './app.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,6 +33,7 @@ import { GamearenaComponent } from './gamearena/gamearena.component';
     UserInfoComponent,
 
   ],
+  providers:[AppService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

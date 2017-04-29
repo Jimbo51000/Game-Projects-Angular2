@@ -1,18 +1,26 @@
 <h1>
-  {{title}}
-  
+	{{title}}
+
 </h1>
 <ul>
-  <li ><a [routerLink]="['/']">landing</a></li>
-  <li ><a [routerLink]="['/gameroom']">gameroom</a></li>
-  <li ><a [routerLink]="['/gamearena']">gamearena</a></li>
+	<li><a [routerLink]="['/']">landing</a></li>
+	<li><a [routerLink]="['/gameroom']">gameroom</a></li>
+	<li><a [routerLink]="['/gamearena']">gamearena</a></li>
 </ul>
- 
+
 <div class="jumbotron">
 	<div class="row">
 		<div class="col-sm-4 col-sm-offset-4 ">
-        <router-outlet></router-outlet>
+			<router-outlet></router-outlet>
 		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4 col-sm-offset-4 ">
+			<div *ngIf="homeScreenMessage.message" class="{{homeScreenMessage.styleClass}}">
+				{{homeScreenMessage.message}}
+			</div>
+		</div>
+
 	</div>
 
 </div>
