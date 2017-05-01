@@ -37,7 +37,6 @@ export class LandingComponent {
 
       this.playerService.socket.on('add-player-message', function (message) {
         let type = message.type;
-        console.log('aaaaaaaaaa');
         if (type == 'success-message') {
           if (message.package.success) {
             reference.appService.setHomeScreenMessage(message.package.message, "alert alert-success");
@@ -54,9 +53,9 @@ export class LandingComponent {
       this.playerService.socket.on('update-player-list', function (player) {
 
         reference.playerService.addNewPlayertoList(player);
-        console.log('new player' + JSON.stringify(player));
-        console.log('updated list' + JSON.stringify(reference.playerService.players));
-        // reference.playerService.addNewPlayertoList(new Player("testplayer"));
+        // console.log('new player' + JSON.stringify(player));
+        // console.log('updated list' + JSON.stringify(reference.playerService.players));
+        // // reference.playerService.addNewPlayertoList(new Player("testplayer"));
       });
     }
 

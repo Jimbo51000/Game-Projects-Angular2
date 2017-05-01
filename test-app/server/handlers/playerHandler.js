@@ -1,6 +1,6 @@
 
 var players = [];
-var maxPlayers = 5;
+var maxPlayers = 2;
 var newPlayer;
 exports.methods = {
 
@@ -25,7 +25,7 @@ exports.methods = {
         var message ;
         //reinitialize
         this.newPlayer=null;
-        if (newplayer && this.players.length < 5) {
+        if (newplayer && this.players.length < this.maxPlayers) {
             //check if the player already exists
             for (var i in this.players) {
                // console.log(JSON.stringify(this.players));
@@ -58,6 +58,10 @@ exports.methods = {
     ,
     getNewPlayer: function () {
         return this.newPlayer;
+    }
+    ,
+    canWeStartTheGameNow:function(){
+        return this.players.length == this.maxPlayers;
     }
 
 }

@@ -9,3 +9,13 @@ io.on('connection', function (socket) {
 });
 
 
+// add typings definition to node.js app for enabling intellisense suggestions
+
+//node js logger
+
+//open vs code using cmd - code .
+
+//how to debug a node js app
+1. https://www.youtube.com/watch?v=kqLRCoClfko
+2.https://www.youtube.com/watch?v=egBJ0cd0GLM
+

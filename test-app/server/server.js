@@ -61,6 +61,14 @@ io.on('connection', (socket) => {
 
     socket.emit('add-player-message', { type: 'success-message', package: package });
     io.emit('update-player-list', playerHandler.methods.getNewPlayer());
+
+//is the async nature of socket events a problem , the start-game never seems to be true;
+    if(playerHandler.methods.canWeStartTheGameNow()){
+      io.emit('start-game',{value:true});
+    }
+    else{
+      io.emit('start-game',{value:false});
+    }
   });
 });
 
