@@ -3,16 +3,15 @@ var router = express.Router()
 var playerHandler = require('../handlers/playerHandler');
 
 
-
-//get the players list
+//api get the players list
 router.get('/', function (req, res) {
     //TODO:the players are defined here , get them  off from here
     console.log('get hits');
     players = playerHandler.methods.getAllPlayers();
     return res.json(players);
 })
-
- 
+  
+//api put call to add more players
 router.put('/', function (req, res) {
     console.log('put hits');
     console.log("add user name :" + req.body.name);
@@ -22,11 +21,16 @@ router.put('/', function (req, res) {
     if (playerHandler.methods.addNewPlayer(newPlayer)) {
         res.json({ "success": true });
     }
-    else {
+    else { 
         res.json({ "success": false });
-    } 
+    }
     // res.send('seothing');
 })
 
+//api call to reset
+router.get('/reset',function(req,res){
+    playerHandler.methods.  init();
+    res.sendStatus(200);
+})
 
 module.exports = router

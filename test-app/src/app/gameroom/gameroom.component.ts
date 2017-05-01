@@ -14,9 +14,10 @@ export class GameroomComponent implements OnInit {
   ngOnInit() {
     console.log('game room initialised');
     //do a service request call to fetch all the players
-    this.playerService.getPlayers().subscribe(data=>{
-      this.players = data;
-    });
+    this.players = this.playerService.players;
+    // this.playerService.getPlayers().subscribe(data=>{
+    //   this.players = data;
+    // });
   }
 
 

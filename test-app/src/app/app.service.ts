@@ -12,8 +12,7 @@ export class HomeScreenMessage{
 
 @Injectable()
 export class AppService {
-   homeScreenMessage:HomeScreenMessage;
- 
+  homeScreenMessage:HomeScreenMessage;  
   
   constructor() {
     this.homeScreenMessage = new HomeScreenMessage("","");

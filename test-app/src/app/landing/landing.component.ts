@@ -6,45 +6,55 @@ import { Player } from '../modal/player';
 import { PlayerService } from '../services/player.service';
 import { AppService } from '../app.service';
 import { HomeScreenMessage } from '../app.service';
-import {AppComponent} from '../app.component';
+import { AppComponent } from '../app.component';
+import * as io from 'socket.io-client';
+
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css']
 })
 export class LandingComponent {
-  username: string = '';
+  currentPlayer: Player=null;
 
-  constructor(private dialogService: DialogService, private router: Router, private playerService: PlayerService, private appService: AppService) {
-      // this.appService.homeScreenMessage = new HomeScreenMessage("","");
+  constructor(private appService: AppService, private dialogService: DialogService, private router: Router, private playerService: PlayerService) {
+    //console.log('landing const called');
+    this.playerService.initialisePlayerSocket();
+    let reference = this;
+    //register all the socket events , bind them
+    this.playerService.socket.on('add-player-message', function (message) {
+      let type = message.type;
+      if (type == 'success-message') {
+        if (message.value) {
+          reference.appService.setHomeScreenMessage("You have entered the game room", "alert alert-success");
+          reference.playerService.addNewPlayertoList(reference.currentPlayer);
+          reference.router.navigate(['/gameroom']);
+        }
+        else {
+          reference.appService.setHomeScreenMessage("Either invalid name/Max Users reached", "alert alert-warning");
+        }
+      }
+
+    });
+
+
   }
 
+
+  addPlayer(username:string): void {
+    this.currentPlayer =  new Player(username) ; 
+    this.playerService.socket.emit('add-player',this.currentPlayer);
+  }
 
   showNamePrompt() {
     this.dialogService.addDialog(UserInfoComponent, {
       title: 'Name dialog',
       question: 'What is your name?: '
     })
-      .subscribe((message) => {
+      .subscribe((username) => {
         //We get dialog result
-        this.username = message;
-        //add this user to player list
-        let res = {};
-        this.playerService.addPlayer(new Player(this.username))
-          .subscribe(data => {
-            res = data;
-            //navigate to the game room
-            //cannot call this outside due to async operation of the dialog service
-            if (res['success']) {             
-              this.appService.setHomeScreenMessage("You have entered the game room","alert alert-success");
-              this.router.navigate(['/gameroom']);
-            }
-            else {
-              this.appService.setHomeScreenMessage("Either invalid name/Max Users reached", "alert alert-warning");
-            }
-
-
-          });
+        console.log("Before adding "+this.playerService.players);
+        this.addPlayer(username);
       });
 
   }

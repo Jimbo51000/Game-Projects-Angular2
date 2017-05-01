@@ -1,16 +1,16 @@
 var express = require('express')
 var app = express()
 
+//socket connect code
+let http = require('http').Server(app);
 
 //this function is needed to handle the CORS request header requirements
 app.use(function (req, res, next) {
-  //TODO: why isn't this working , should this be applied everywhere ?
+
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With,Access-Control-Allow-Origin');
-  // console.log('somehting happening here');
-  // var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  // console.log(req.method + "@" + fullUrl);
+
   if ('OPTIONS' === req.method) {
     //respond with 200
     res.sendStatus(200);
@@ -34,21 +34,48 @@ app.use(bodyParser.json());
 
 
 //set the routes
-var players = require('./routes/players');
+var players = require('./api_routes/players');
 app.use('/api/players', players);
 
 var playerHandler = require('./handlers/playerHandler');
 
+
+
+
+let io = require('socket.io')(http);
+
+io.on('connection', (socket) => {
+  console.log('user connected');
+  
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+  
+  socket.on('add-player', (player) => {
+    console.log('socket add player hits');
+    console.log("add user name :" + player.name);
+    //add the new player
+    var newPlayer = { "id": "0", "name": player.name };
+    //dont use this. for the var declared above
+    if (playerHandler.methods.addNewPlayer(newPlayer)) {
+        socket.emit('add-player-message', {type:'success-message', value: true});
+    }
+    else {
+         socket.emit('add-player-message', {type:'success-message', value: false});  
+    }    
+  });
+});
+
+
+
 app.get('/',function(req,res){
   console.log('default to test Server ');
   res.sendStatus(200);//OK
-})
+});
 
-
-
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-    //this init will load the players list 
+http.listen(3000, () => {
+  console.log('started on port 3000');
+      //this init will load the players list 
   //this data will be persistant throughout since the playerHandler instance is declared once and used
   playerHandler.methods.init();
-})
+});

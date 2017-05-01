@@ -13,6 +13,7 @@ import { routing } from './app.routes';
 
 import { GamearenaComponent } from './gamearena/gamearena.component';
 import {AppService} from './app.service';
+import {PlayerService} from './services/player.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,7 @@ import {AppService} from './app.service';
     UserInfoComponent,
 
   ],
-  providers:[AppService],
+  providers:[AppService,PlayerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
