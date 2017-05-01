@@ -1,0 +1,11 @@
+socket rooms - io.of(<namespace>)
+
+//Broadcasting means sending a message to everyone else except for the socket that starts it.
+
+var io = require('socket.io')(80);
+
+io.on('connection', function (socket) {
+  socket.broadcast.emit('user connected');
+});
+
+

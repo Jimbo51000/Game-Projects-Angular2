@@ -30,7 +30,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
-  
+
 
 
 //set the routes
@@ -43,39 +43,37 @@ var playerHandler = require('./handlers/playerHandler');
 
 
 let io = require('socket.io')(http);
-
-io.on('connection', (socket) => {
-  console.log('user connected');
   
-  socket.on('disconnect', function(){
+io.on('connection', (socket) => {
+  console.log('user connected :' + socket.id);
+
+  socket.on('disconnect', function () {
     console.log('user disconnected');
   });
-  
+
   socket.on('add-player', (player) => {
-    console.log('socket add player hits');
+    //console.log('socket add player hits');
     console.log("add user name :" + player.name);
     //add the new player
-    var newPlayer = { "id": "0", "name": player.name };
+    var newPlayer = { 'id': socket.id.toString(), 'name': player.name };
     //dont use this. for the var declared above
-    if (playerHandler.methods.addNewPlayer(newPlayer)) {
-        socket.emit('add-player-message', {type:'success-message', value: true});
-    }
-    else {
-         socket.emit('add-player-message', {type:'success-message', value: false});  
-    }    
+    var package = playerHandler.methods.addNewPlayer(newPlayer);
+
+    socket.emit('add-player-message', { type: 'success-message', package: package });
+    io.emit('update-player-list', playerHandler.methods.getNewPlayer());
   });
 });
 
 
 
-app.get('/',function(req,res){
+app.get('/', function (req, res) {
   console.log('default to test Server ');
   res.sendStatus(200);//OK
 });
 
 http.listen(3000, () => {
   console.log('started on port 3000');
-      //this init will load the players list 
+  //this init will load the players list 
   //this data will be persistant throughout since the playerHandler instance is declared once and used
   playerHandler.methods.init();
 });

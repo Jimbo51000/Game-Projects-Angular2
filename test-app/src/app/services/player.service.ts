@@ -13,7 +13,9 @@ export class PlayerService {
   }
 
   initialisePlayerSocket(): void {
-    this.socket = io('http://localhost:3000/');
+    if(!this.socket){
+         this.socket = io('http://localhost:3000/');
+    }
     //console.log(this.socket);
   }
 
