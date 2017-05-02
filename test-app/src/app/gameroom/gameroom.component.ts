@@ -17,6 +17,7 @@ export class GameroomComponent implements OnInit,OnDestroy {
           //if true start the 3 second count down & redirect to game arena
           //alert(obj.value);
           if(obj.value){
+            alert('start game yeah');
             this.startGame = true;
             setTimeout(()=>{alert('lets redirect ')},3000);
           }

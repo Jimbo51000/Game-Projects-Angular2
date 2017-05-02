@@ -25,7 +25,10 @@ exports.methods = {
         var message ;
         //reinitialize
         this.newPlayer=null;
-        if (newplayer && this.players.length < this.maxPlayers) {
+        this.maxPlayers = Number(this.maxPlayers);
+        console.log('cond:'+this.players.length +","+ this.maxPlayers.valueOf());
+        
+        if (newplayer && this.players.length < this.maxPlayers.valueOf()) {
             //check if the player already exists
             for (var i in this.players) {
                // console.log(JSON.stringify(this.players));
@@ -43,13 +46,14 @@ exports.methods = {
             return {'message':message,'success':true};
         }
         else {
-            if(this.players.length>=5){
+            if(this.players.length>=this.maxPlayers.valueOf){
                 return {'message':"Max players reached",'success':false};
             }
             if(!newplayer){
                 return {'message':"Invalid player name",'success':false};
             }
            
+           return {'message':"Something wrong with the server",'success':false};
         }
     },
     getAllPlayers: function () {
@@ -61,7 +65,8 @@ exports.methods = {
     }
     ,
     canWeStartTheGameNow:function(){
-        return this.players.length == this.maxPlayers;
+        this.maxPlayers = Number(this.maxPlayers);
+        return this.players.length == this.maxPlayers.valueOf();
     }
 
 }
