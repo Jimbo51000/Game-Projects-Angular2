@@ -19,3 +19,8 @@ io.on('connection', function (socket) {
 1. https://www.youtube.com/watch?v=kqLRCoClfko
 2.https://www.youtube.com/watch?v=egBJ0cd0GLM
 
+//logger
+//environment variables
+//testing
+//server monitoring
+//session tracking

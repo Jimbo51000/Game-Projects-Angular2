@@ -6,6 +6,7 @@ exports.methods = {
 
     init: function () {
         console.log('server init called');
+        this.maxPlayers=2;
         this.players = [
             // {
             //     "id": "1",
@@ -25,10 +26,11 @@ exports.methods = {
         var message ;
         //reinitialize
         this.newPlayer=null;
-        this.maxPlayers = Number(this.maxPlayers);
-        console.log('cond:'+this.players.length +","+ this.maxPlayers.valueOf());
+        //var maxPlayers = 2;
+        //this.maxPlayers = Number(this.maxPlayers);
+        console.log('cond:'+this.players.length +","+ this.maxPlayers);
         
-        if (newplayer && this.players.length < this.maxPlayers.valueOf()) {
+        if (newplayer && this.players.length < this.maxPlayers) {
             //check if the player already exists
             for (var i in this.players) {
                // console.log(JSON.stringify(this.players));
