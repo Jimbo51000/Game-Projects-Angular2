@@ -38,7 +38,7 @@ var players = require('./api_routes/players');
 app.use('/api/players', players);
 
 var playerHandler = require('./handlers/playerHandler');
-
+var gameHandler = require('./handlers/gameHandler');
 
 
 
@@ -63,8 +63,13 @@ io.on('connection', (socket) => {
     io.emit('update-player-list', playerHandler.methods.getNewPlayer());
 
 //is the async nature of socket events a problem , the start-game never seems to be true;
-    if(playerHandler.methods.canWeStartTheGameNow()){
+    var letsStartGame = gameHandler.methods.canWeStartTheGameNow();
+    if(letsStartGame){
       io.emit('start-game',{value:true});
+      var currentPlayer = playerHandler.methods.nextTurn();
+      io.to(currentPlayer.id).emit('next-turn',function(){
+
+      });
     }
     else{
       io.emit('start-game',{value:false});

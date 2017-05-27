@@ -1,6 +1,12 @@
 <div class="panel panel-default">
 	<div class="panel-heading text-center">Game room</div>
 	<div class="list-group">
-    <a *ngFor="let player of players" class="list-group-item list-group-item-action text-center">{{player.name}}</a>
+		<a *ngFor="let player of players" class="list-group-item list-group-item-action text-center">{{player.name}}</a>
 	</div>
+
+</div>
+
+<div>
+	<ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1" [speed]="'200'" [showSpinner]="'false'" [direction]="'rightToLeftIncreased'"
+		[color]="'red'" [trickleSpeed]="250" [thick]="false" [ease]="'linear'"></ng-progress>
 </div>

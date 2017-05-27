@@ -14,6 +14,7 @@ import { routing } from './app.routes';
 import { GamearenaComponent } from './gamearena/gamearena.component';
 import {AppService} from './app.service';
 import {PlayerService} from './services/player.service';
+import { NgProgressModule } from 'ng2-progressbar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +29,8 @@ import {PlayerService} from './services/player.service';
     HttpModule,
     AlertModule.forRoot(),
     BootstrapModalModule,
-    routing
+    routing,
+    NgProgressModule
   ],
     entryComponents: [
     UserInfoComponent,
