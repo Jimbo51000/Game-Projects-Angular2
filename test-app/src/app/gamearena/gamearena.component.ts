@@ -10,7 +10,7 @@ export class GamearenaComponent implements OnInit {
   constructor(private playerService:PlayerService) { 
 
     let reference = this;
-    this.playerService.socket.on('',function(obj){
+    this.playerService.socket.on('asdasd',function(obj){
 
     });
   }

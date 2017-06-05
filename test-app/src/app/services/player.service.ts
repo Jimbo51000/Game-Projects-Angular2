@@ -26,6 +26,15 @@ export class PlayerService {
 
   }
 
+  removePlayerFromList(id){
+      for(var i=0;i<=this.players.length;i++){
+        var currentPlayer = this.players[i];
+        if(currentPlayer.id==id){
+          this.players.splice(i,1);
+        }
+      }
+  }
+
   //API call to get all the players
   getPlayers(): Observable<Player[]> {
 

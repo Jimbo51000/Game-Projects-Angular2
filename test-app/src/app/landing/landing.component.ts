@@ -50,13 +50,25 @@ export class LandingComponent {
 
       });
       //3.
-      this.playerService.socket.on('update-player-list', function (player) {
+      this.playerService.socket.on('add-player-list', function (player) {
 
         reference.playerService.addNewPlayertoList(player);
         // console.log('new player' + JSON.stringify(player));
         // console.log('updated list' + JSON.stringify(reference.playerService.players));
         // // reference.playerService.addNewPlayertoList(new Player("testplayer"));
       });
+
+
+
+      //4.
+      this.playerService.socket.on('notification-message',function(obj){
+           reference.appService.setHomeScreenMessage(obj.message, "alert alert-info");
+      });
+
+      //5.
+      this.playerService.socket.on('remove-player-list',function(id){
+          reference.playerService.removePlayerFromList(id);
+      })
     }
 
 

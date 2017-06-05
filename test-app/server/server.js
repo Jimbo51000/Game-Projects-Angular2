@@ -39,7 +39,7 @@ app.use('/api/players', players);
 
 var playerHandler = require('./handlers/playerHandler');
 var gameHandler = require('./handlers/gameHandler');
-
+var GameHandler = new gameHandler();
 
 
 let io = require('socket.io')(http);
@@ -49,6 +49,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', function () {
     console.log('user disconnected');
+    //TODO : remove player from the player list once hes disconnected
   });
 
   socket.on('add-player', (player) => {
@@ -57,24 +58,45 @@ io.on('connection', (socket) => {
     //add the new player
     var newPlayer = { 'id': socket.id.toString(), 'name': player.name };
     //dont use this. for the var declared above
-    var package = playerHandler.methods.addNewPlayer(newPlayer);
+    var canWeKeepHim = {value:false} ;
+    var package = playerHandler.methods.addNewPlayer(newPlayer,canWeKeepHim);
+
+    //on successful addition of new player add him to gameroom socket room
+    if(canWeKeepHim.value){
+        socket.join('gameroom');
+    }
 
     socket.emit('add-player-message', { type: 'success-message', package: package });
-    io.emit('update-player-list', playerHandler.methods.getNewPlayer());
+    io.emit('add-player-list', playerHandler.methods.getNewPlayer());
 
+    
 //is the async nature of socket events a problem , the start-game never seems to be true;
-    var letsStartGame = gameHandler.methods.canWeStartTheGameNow();
-    if(letsStartGame){
-      io.emit('start-game',{value:true});
-      var currentPlayer = playerHandler.methods.nextTurn();
-      io.to(currentPlayer.id).emit('next-turn',function(){
+    
+    if(GameHandler.currentGameState == GameHandler.yetToStartGame && playerHandler.methods.doWeHaveMaxPlayers()){
+      GameHandler.changeCurrentGameState(GameHandler.gameHasStarted);
+      io.to('gameroom').emit('start-game',{value:true});
+      
+      //TODO : from this point wait for 3 sec for all players to acknowledge the start game 
+      // this is because some players might have left the gameroom
+      // var currentPlayer = playerHandler.methods.nextTurn();
+      // io.to(currentPlayer.id).emit('next-turn',function(){
 
-      });
+      // });
     }
-    else{
-      io.emit('start-game',{value:false});
-    }
+
   });
+
+  //3.
+  socket.on('exit-gameroom',function(obj){
+    
+      console.log('stop game');
+      GameHandler.changeCurrentGameState(GameHandler.yetToStartGame);
+      this.playerHandler.methods.removePlayerBySocketId(socket.id);      
+      io.to('gameroom').emit('remove-player-list',socket.id);
+      socket.emit('notification-message',{message:'You have exited the game room , join back '});
+      socket.leave('gameroom');
+  });
+
 });
 
 

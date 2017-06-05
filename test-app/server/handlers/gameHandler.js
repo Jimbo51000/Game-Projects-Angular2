@@ -1,11 +1,16 @@
 
-var playerHandler = require('./handlers/playerHandler');
+module.exports = class GameHandler {
+    constructor() {
+        this.yetToStartGame = 0;
+        this.gameHasStarted = 1;
+        this.someOneIsPlaying = 2;
+        this.gameHasEnded = 3;
+        this.currentGameState = this.yetToStartGame;
 
-var isGameStarted ;
-var gameS
-exports.methods = {
-    canWeStartTheGameNow: function () {
-
-        this.isGameStarted =  playerHandler.methods.canWeStartTheGameNow();
     }
+    
+     changeCurrentGameState(state){
+            this.currentGameState = state;
+    }
+
 };

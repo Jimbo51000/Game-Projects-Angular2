@@ -2,7 +2,7 @@
 var players = [];
 var maxPlayers = 2;
 var newPlayer;
-var turnIndex ;
+var turnIndex;
 exports.methods = {
 
     init: function () {
@@ -24,7 +24,7 @@ exports.methods = {
             // } 
         ];
     },
-    addNewPlayer: function (newplayer) {
+    addNewPlayer: function (newplayer,canWeKeepHim) {
         var message;
         //reinitialize
         this.newPlayer = null;
@@ -46,6 +46,7 @@ exports.methods = {
 
             this.players.push(newplayer);
             this.newPlayer = newplayer;
+            canWeKeepHim.value = true;
             message = "You have entered the game room";
             return { 'message': message, 'success': true };
         }
@@ -68,14 +69,23 @@ exports.methods = {
         return this.newPlayer;
     }
     ,
-    canWeStartTheGameNow: function () {
+    doWeHaveMaxPlayers: function () {
 
         return this.players.length == this.maxPlayers;
     }
     ,
-    nextTurn:function(){
-        this.turnIndex = (this.turnIndex+1)%this.maxPlayers;
+    nextTurn: function () {
+        this.turnIndex = (this.turnIndex + 1) % this.maxPlayers;
         return this.players[this.turnIndex];
+    }
+    ,
+    removePlayerBySocketId: function (id) {
+        for (var i = 0; i <= this.players.length; i++) {
+            var currentPlayer = this.players[i];
+            if (currentPlayer.id == id) {
+                this.players.splice(i, 1);
+            }
+        }
     }
 }
 
