@@ -39,7 +39,7 @@ exports.methods = {
                 //console.log('player:'+JSON.stringify(this.players[0]));
                 if (this.players[i].id === newplayer.id) {
                     //console.log('duplicate player');
-                    message = "You have already joined !";
+                    message = "Nah due ,You have already joined !";
                     return { 'message': message, 'success': false };
                 }
             }
@@ -47,18 +47,18 @@ exports.methods = {
             this.players.push(newplayer);
             this.newPlayer = newplayer;
             canWeKeepHim.value = true;
-            message = "You have entered the game room";
+            message = "Yo! My man ,You have entered the game room";
             return { 'message': message, 'success': true };
         }
         else {
             if (this.players.length >= this.maxPlayers) {
-                return { 'message': "Max players reached", 'success': false };
+                return { 'message': "Sorry Bro , Max players reached", 'success': false };
             }
             if (!newplayer) {
-                return { 'message': "Invalid player name", 'success': false };
+                return { 'message': "Can't you see ? Invalid player name", 'success': false };
             }
 
-            return { 'message': "Something wrong with the server", 'success': false };
+            return { 'message': "Ahh !Something wrong with the server", 'success': false };
         }
     },
     getAllPlayers: function () {

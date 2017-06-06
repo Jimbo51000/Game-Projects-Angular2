@@ -1,12 +1,19 @@
-<div class="panel panel-default">
-	<div class="panel-heading text-center">Game room</div>
-	<div class="list-group">
-		<a *ngFor="let player of players" class="list-group-item list-group-item-action text-center">{{player.name}}</a>
+<div class="container">
+	<div class="panel panel-default">
+		<div class="panel-heading text-center">Game room</div>
+		<div class="list-group">
+			<a *ngFor="let player of players" class="list-group-item list-group-item-action text-center">{{player.name}}</a>
+		</div>
+
 	</div>
-
-</div>
-
-<div>
-	<ng-progress [positionUsing]="'marginLeft'" [minimum]="0.15" [maximum]="1" [speed]="'200'" [showSpinner]="'false'" [direction]="'rightToLeftIncreased'"
-		[color]="'red'" [trickleSpeed]="250" [thick]="false" [ease]="'linear'"></ng-progress>
+	<div class="row" *ngIf="startGame">
+		<div class="col-md-3 col-md-offset-3">
+			<span>Game Starts in <strong>{{counter}}</strong> second(s)</span>
+		</div>
+	</div>
+	<div class="row" *ngIf="startGame">
+		<div class="col-md-3 col-md-offset-3">
+			<button type="button" class="btn btn-danger" (click)="onClickExitGameRoom()">Exit</button>
+		</div>
+	</div>
 </div>

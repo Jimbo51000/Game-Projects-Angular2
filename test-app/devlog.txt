@@ -45,10 +45,16 @@ in a 'strict registered clients only' room which shall receive all the updates.
 
 
 -----
-TODO:
+TODO: event based system :
 removing players from server player list must also notify the clients of the updated list,
 this might need a player state event triggered system , where once a player is to be removed a 'removed-player'
 event would be fired due to state change , calling for appropriates action .
+
+
+-----
+
+TODO v2:
+Use the algorithm to design a datastructure to maintain the multiple gamerooms
 
 
 -----
