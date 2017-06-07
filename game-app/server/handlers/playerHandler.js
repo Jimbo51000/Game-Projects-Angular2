@@ -3,12 +3,16 @@ var players = [];
 var maxPlayers = 2;
 var newPlayer;
 var turnIndex;
+var gameEntryString;
+var playerEntryIndex;
 exports.methods = {
 
     init: function () {
         console.log('server init called');
         this.maxPlayers = 2;
         this.turnIndex = -1;
+        this.gameEntryString="";
+        this.playerEntryIndex=0;
         this.players = [
             // {
             //     "id": "1",
@@ -75,7 +79,7 @@ exports.methods = {
     }
     ,
     nextTurn: function () {
-        this.turnIndex = (this.turnIndex + 1) % this.maxPlayers;
+        this.turnIndex = (this.turnIndex + 1) % this.players.length;
         return this.players[this.turnIndex];
     }
     ,
@@ -86,12 +90,36 @@ exports.methods = {
                 this.players.splice(i, 1);
             }
         }
+        
+    }
+    ,
+    removePlayerByTurnIndex:function(){
+        this.players.splice(this.turnIndex, 1);
+        this.turnIndex = (this.turnIndex - 1) % this.players.length;
+    }
+    ,
+    updateGameEntryString:function(key){
+
+        this.gameEntryString = this.gameEntryString.concat(key);
+        
+    }
+    ,
+    playerIsRightTillNow:function(key){
+        return this.gameEntryString[this.playerEntryIndex]==key;
+    }
+    ,
+    isPlayerCompletelyRight:function(){
+        return this.gameEntryString == "" || this.gameEntryString.length == this.playerEntryIndex;
+    }
+    ,
+    resetAfterPlayerTurn:function(){
+        this.playerEntryIndex = 0;
     }
 }
 
 //export only connstants here
 exports.data = {
-    maxPlayers
+    maxPlayers , gameEntryString, playerEntryIndex
 }
 
 exports.newPlayer = function () {

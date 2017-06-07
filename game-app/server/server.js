@@ -42,6 +42,7 @@ var gameHandler = require('./handlers/gameHandler');
 var GameHandler = new gameHandler();
 
 
+
 let io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
@@ -74,7 +75,19 @@ io.on('connection', (socket) => {
 
     if (GameHandler.currentGameState == GameHandler.yetToStartGame && playerHandler.methods.doWeHaveMaxPlayers()) {
       GameHandler.changeCurrentGameState(GameHandler.gameHasStarted);
-      io.to('gameroom').emit('start-game', { value: true, delay: 10000 });
+      var delay = 10000;
+      io.to('gameroom').emit('start-game', { value: true, delay: delay });
+      //if the game state is still gameHasStarted after delay then fire the gameplay events
+      GameHandler.gameArenaRedirectTimer = setTimeout(() => {
+        if (GameHandler.currentGameState == GameHandler.gameHasStarted) {
+          console.log('hey this works after 10s');
+          var currentPlayerTurn = playerHandler.methods.nextTurn();
+          var socket = io.sockets.sockets[currentPlayerTurn.id];
+          socket.emit('next-turn', { myturn: true });
+          io.to('gameroom').emit('next-turn', { myturn: false, playerName: currentPlayerTurn.name });
+        }
+
+      }, delay);
 
       //TODO : from this point wait for 3 sec for all players to acknowledge the start game 
       // this is because some players might have left the gameroom
@@ -83,6 +96,46 @@ io.on('connection', (socket) => {
 
       // });
     }
+
+    //gameplay socket events
+    //1.
+    socket.on('player-key-pressed', function (obj) {
+      socket.broadcast.to('gameroom').emit('other-player-key-pressed');
+      if (playerHandler.methods.isPlayerCompletelyRight()) {
+        playerHandler.methods.updateGameEntryString(obj.key);
+        playerHandler.methods.resetAfterPlayerTurn();
+        //next guys turn
+        var nextPlayerTurn = playerHandler.methods.nextTurn();
+        var socket = io.sockets.sockets[nextPlayerTurn.id];
+        socket.emit('next-turn', { myturn: true });
+        io.to('gameroom').emit('next-turn', { myturn: false, playerName: nextPlayerTurn.name });
+      }
+      else if (playerHandler.methods.playerIsRightTillNow(obj.key)) {
+        playerHandler.data.playerEntryIndex += 1;
+        socket.broadcast.to('gameroom').emit('other-player-key', { key: obj.key });
+      }
+      else {
+        //the player has failed and needs to be removed from ui , player list and socket game room
+        playerHandler.methods.removePlayerByTurnIndex();
+        playerHandler.methods.resetAfterPlayerTurn();
+        //NOTE : this behaviour might be unpredictable
+        socket.emit('notification-message', { message: 'Oops , wrong key man . You are out !' });
+        socket.broadcast.to('gameroom').emit('notification-message', { message: 'Damn , he s out!' });
+        socket.emit('player-wrong-entry');
+        io.to('gameroom').emit('remove-player-list', socket.id);
+        socket.leave('gameroom');
+        //next turn
+        var nextPlayerTurn = playerHandler.methods.nextTurn();
+        var socket = io.sockets.sockets[nextPlayerTurn.id];
+        socket.emit('next-turn', { myturn: true });
+        io.to('gameroom').emit('next-turn', { myturn: false, playerName: nextPlayerTurn.name });
+      }
+    });
+
+    //2.
+    socket.on('player-key-released', function (obj) {
+      socket.broadcast.to('gameroom').emit('other-player-key-released');
+    })
 
   });
 
@@ -95,6 +148,7 @@ io.on('connection', (socket) => {
     if (!playerHandler.methods.doWeHaveMaxPlayers() && GameHandler.currentGameState == GameHandler.gameHasStarted) {
       console.log('stop game');
       GameHandler.changeCurrentGameState(GameHandler.yetToStartGame);
+      clearTimeout(GameHandler.gameArenaRedirectTimer);
       io.to('gameroom').emit('remove-player-list', socket.id);
       io.to('gameroom').emit('stop-game');
       socket.emit('notification-message', { message: 'You have exited the game room , join back ' });
