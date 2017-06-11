@@ -14,7 +14,7 @@ export class GameroomComponent implements OnInit, OnDestroy {
 
   players: Player[];
   startGame: boolean = false;
-  timer :Observable<number>;
+  timer: Observable<number>;
   subscription: Subscription;
   counter = 0;
   constructor(private playerService: PlayerService, private router: Router) {
@@ -32,10 +32,10 @@ export class GameroomComponent implements OnInit, OnDestroy {
         // let timer = Observable.timer(0, 1000);
         reference.subscription = reference.timer.subscribe(t => {
           reference.counter -= 1;
-          if(reference.counter==0){
-                reference.router.navigate(['/gamearena']);
+          if (reference.counter == 0) {
+            reference.router.navigate(['/gamearena']);
           }
-      });
+        });
 
       }
 

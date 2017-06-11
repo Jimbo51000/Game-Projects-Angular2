@@ -6,7 +6,7 @@
 	 aria-describedby="basic-addon1" 
 	 [disabled]="disableInputBox"
 	  (keypress)="onKeyPressed($event)"  (keyup)="onKeyReleased($event)"
-		[ngModel]={{entry}}>
+		[ngModel]="entry">
 </div>
 <div>
 	<span [hidden]="disappear"><strong>{{entry}}</strong></span>

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class GamearenaComponent implements OnInit {
 
-  disableInputBox: boolean = false;
+  disableInputBox: boolean = true;
   disappear: boolean = false;
   disappearTimer: any;
   entry: string;
@@ -22,8 +22,9 @@ export class GamearenaComponent implements OnInit {
     //1.
     this.playerService.socket.on('next-turn', function (obj) {
       reference.entry = "";
+      console.log('next-turn',obj.myturn);
       if (obj.myturn) {
-        alert('start typing bro');
+        //alert('start typing bro');
         reference.disableInputBox = false;
         let message = 'It s your turn bro!';
         reference.appService.setHomeScreenMessage(message, "alert alert-info");
